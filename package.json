@@ -5,9 +5,9 @@
   "main": "index.js",
   "isAwsLambda": true,
   "cloudformation": "cloudformation.yaml",
-  "projectName": "MemSub::Fulfilment::Test",
+  "projectName": "subscriptions::digital-subscription-authorisation",
   "riffraffFile": "riff-raff.yaml",
-  "cloudformationAppTag": "fulfilment-node-stub-cloudformation",
+  "cloudformationAppTag": "digital-subscription-authorisation",
   "buildDir": "dist",
   "devDependencies": {
     "babel-cli": "^6.24.1",

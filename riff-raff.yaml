@@ -3,7 +3,7 @@ regions:
 stacks:
 - subscriptions
 deployments:
-  fulfilment-node-stub-lambda:
+  digital-subscription-auth-lambda:
     type: aws-lambda
     parameters:
       bucket: subscriptions-dist
