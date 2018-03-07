@@ -1,0 +1,14 @@
+regions:
+- eu-west-1
+stacks:
+- subscriptions
+deployments:
+  fulfilment-node-stub-lambda:
+    type: aws-lambda
+    parameters:
+      bucket: subscriptions-dist
+      prefixStack: false
+      fileName: 'digital-subscription-authorisation.zip'
+      functionNames:
+      - DigitalSubAuth-
+

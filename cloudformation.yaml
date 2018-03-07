@@ -1,0 +1,133 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: digital subscription authorisation
+Parameters:
+  Stack:
+    Description: Stack name
+    Type: String
+    Default: subscriptions
+  Stage:
+    Description: Stage name
+    Type: String
+    AllowedValues:
+      - CODE
+    Default: CODE
+  App:
+    Description: App name
+    Type: String
+    AllowedValues:
+      - digital-subscription-authorisation
+    Default: digital-subscription-authorisation
+  DeployBucket:
+    Description: Bucket where RiffRaff uploads artifacts on deploy
+    Type: String
+    Default: subscriptions-dist
+Resources:
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: logs
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - logs:CreateLogGroup
+                - logs:CreateLogStream
+                - logs:PutLogEvents
+              Resource: arn:aws:logs:*:*:*
+        - PolicyName: lambda
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource: "*"
+        - PolicyName: dynamoTable
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+              - dynamodb:PutItem
+              - dynamodb:GetItem
+              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/cas-auth-${Stage}'
+  DigitalSubAuthLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub DigitalSubAuth-${Stage}
+      Code:
+        S3Bucket:
+          Ref: DeployBucket
+        S3Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          Stack: !Ref Stack
+          App: ${App}
+      Description: digital subscription authorization TODO better description
+      Handler: DigitalSubAuth.handler
+      MemorySize: 1536
+      Role: !GetAtt ExecutionRole.Arn
+      Runtime: nodejs6.10
+      Timeout: 300
+
+  DigitalSubAuthApiPermission:
+          Type: AWS::Lambda::Permission
+          Properties:
+              Action: lambda:invokeFunction
+              FunctionName: !Sub DigitalSubAuth-${Stage}
+              Principal: apigateway.amazonaws.com
+          DependsOn: DigitalSubAuthLambda
+
+  DigitalSubAuthApi:
+      Type: "AWS::ApiGateway::RestApi"
+      Properties:
+          Description: Api to handle digital sub authorisation
+          Name: !Sub digital-sub-auth-handler-${Stage}
+
+  DigitalSubAuthApiResource:
+      Type: AWS::ApiGateway::Resource
+      Properties:
+          RestApiId: !Ref DigitalSubAuthApi
+          ParentId: !GetAtt [DigitalSubAuthApi, RootResourceId]
+          PathPart: auth
+      DependsOn: DigitalSubAuthApi
+
+  AuthMethod:
+      Type: AWS::ApiGateway::Method
+      Properties:
+          AuthorizationType: NONE
+          RestApiId: !Ref DigitalSubAuthApi
+          ResourceId: !Ref DigitalSubAuthApiResource
+          HttpMethod: POST
+          Integration:
+            Type: AWS_PROXY
+            IntegrationHttpMethod: POST
+            Uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DigitalSubAuthLambda.Arn}/invocations
+      DependsOn:
+      - DigitalSubAuthApi
+      - DigitalSubAuthLambda
+      - DigitalSubAuthApiResource
+
+  DigitalSubAuthApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+        Description: Stage for digital sub auth  API
+        RestApiId: !Ref DigitalSubAuthApi
+        DeploymentId: !Ref DigitalSubAuthApiDeployment
+        StageName: !Sub ${Stage}
+    DependsOn: AuthMethod
+
+  DigitalSubAuthApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+        Description: Deploys the digital sub Auth API into an environment/stage
+        RestApiId: !Ref DigitalSubAuthApi
+    DependsOn: AuthMethod
