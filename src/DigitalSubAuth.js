@@ -1,16 +1,16 @@
-const AWS = require('aws-sdk');
-const moment = require('moment');
+const AWS = require('aws-sdk')
+const moment = require('moment')
 
 AWS.config.update({
     region: "eu-west-1"
 })
 
 const stages = ['CODE', 'PROD', 'DEV']
-
-let stage = stages.find((stage) => { return stage === process.env.Stage })
-
-const dynamo = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-const dynamoTableName = `cas-auth-${stage}`;
+let stage = stages.find((stage) => {
+    return stage === process.env.Stage
+})
+const dynamo = new AWS.DynamoDB({apiVersion: '2012-08-10'})
+const dynamoTableName = `cas-auth-${stage}`
 
 async function setInDynamo(appId, deviceId, expiry, TTL) {
     const params = {
@@ -22,17 +22,15 @@ async function setInDynamo(appId, deviceId, expiry, TTL) {
             "ttlTimestamp": {"N": TTL}
         }
     }
-
     await dynamo.putItem(params).promise()
-
 }
 
 function isEmpty(obj) {
     for (var key in obj) {
         if (obj.hasOwnProperty(key))
-            return false;
+            return false
     }
-    return true;
+    return true
 }
 
 async function getExpiryFromDynamo(appId, deviceId) {
@@ -48,7 +46,7 @@ async function getExpiryFromDynamo(appId, deviceId) {
     if (isEmpty(dynamoResponse)) {
         return null //todo what's a nice way of doing something like options in js ?
     } else {
-        return dynamoResponse.Item.expiryDate.S;
+        return dynamoResponse.Item.expiryDate.S
     }
 }
 
@@ -59,16 +57,16 @@ function getResponse(expiryDate) {
             provider: "default",
             expiryDate: expiryDate
         }
-    };
+    }
     var response = {
         statusCode: 200,
         body: JSON.stringify(responseBody)
-    };
-    return response;
+    }
+    return response
 }
 
 async function asyncHandler(input) {
-    console.log("starting digital subscription authorisation...")
+    console.log("Starting digital subscription authorisation lambda...")
     if (!stage) {
         throw new Error(`invalid stage ${process.env.Stage}, please check the stage env variable. Allowed values: ${stages}`)
     }
@@ -94,9 +92,7 @@ async function asyncHandler(input) {
 exports.handler = function (input, context, callback) {
 
     asyncHandler(input).then(res => callback(null, res)).catch(e => {
-        console.log("error: " + e);
-        callback(e);
-    });
-};
-
-
+        console.log("error: " + e)
+        callback(e)
+    })
+}
