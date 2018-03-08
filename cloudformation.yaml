@@ -10,6 +10,7 @@ Parameters:
     Type: String
     AllowedValues:
       - CODE
+      - PROD
     Default: CODE
   App:
     Description: App name
