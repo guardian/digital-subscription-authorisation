@@ -132,3 +132,28 @@ Resources:
         Description: Deploys the digital sub Auth API into an environment/stage
         RestApiId: !Ref DigitalSubAuthApi
     DependsOn: AuthMethod
+
+  DigitalSubAuthDomainName:
+    Type: "AWS::ApiGateway::DomainName"
+    Properties:
+      RegionalCertificateArn: !Sub arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/4055df40-9561-423c-962b-f78f3ce70434
+      DomainName: !Sub digital-subscription-authorisation-${Stage}.subscriptions.guardianapis.com
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+  DigitalSubBasePathMappings:
+    Type: "AWS::ApiGateway::BasePathMapping"
+    Properties:
+      RestApiId: !Ref DigitalSubAuthApi
+      DomainName: !Ref DigitalSubAuthDomainName
+      Stage: CODE
+  DigitalSubAuthDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: subscriptions.guardianapis.com.
+      Name: !Sub digital-subscription-authorisation-${Stage}.subscriptions.guardianapis.com.
+      Comment: !Sub CNAME for digital subscription auth ${Stage}
+      Type: CNAME
+      TTL: '120'
+      ResourceRecords:
+      - !GetAtt DigitalSubAuthDomainName.TargetDomainName # dont know how to get the target domain name here..
