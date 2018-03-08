@@ -9,7 +9,7 @@ This simple application just looks up  trial period expiration dates in the ***c
 If no item is found for a giver user and device pair a new trial period is started by adding a new item to the table. 
 
 
-##Running the lambda locally
+## Running the lambda locally
 
 Since the lambda needs to access a dynamo table AWS credentials with permission to read/write to cas-auth-DEV need to be set in the environment.
 
@@ -27,4 +27,4 @@ To run the lambda use :
  yarn run:auth
  ``` 
 
-This will use the configuration defined in package.json. By default it will use the **cas-code-DEV** table and the lambda input defined in ***test/input/even.json***
+This will use the configuration defined in package.json. By default it will use the **cas-code-DEV** table and the lambda input defined in ***test/input/event.json***
