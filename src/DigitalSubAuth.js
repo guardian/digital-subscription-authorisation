@@ -1,15 +1,11 @@
 const AWS = require('aws-sdk')
 const moment = require('moment')
-
-AWS.config.update({
-    region: "eu-west-1"
-})
-
 const stages = ['CODE', 'PROD', 'DEV']
+
 let stage = stages.find((stage) => {
     return stage === process.env.Stage
 })
-const dynamo = new AWS.DynamoDB({apiVersion: '2012-08-10'})
+const dynamo = new AWS.DynamoDB()
 const dynamoTableName = `cas-auth-${stage}`
 
 async function setInDynamo(appId, deviceId, expiry, TTL) {
@@ -25,14 +21,6 @@ async function setInDynamo(appId, deviceId, expiry, TTL) {
     await dynamo.putItem(params).promise()
 }
 
-function isEmpty(obj) {
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key))
-            return false
-    }
-    return true
-}
-
 async function getExpiryFromDynamo(appId, deviceId) {
     const params = {
         TableName: dynamoTableName,
@@ -43,10 +31,14 @@ async function getExpiryFromDynamo(appId, deviceId) {
         }
     }
     let dynamoResponse = await dynamo.getItem(params).promise()
-    if (isEmpty(dynamoResponse)) {
-        return null //todo what's a nice way of doing something like options in js ?
+    if (dynamoResponse.Item) {
+        let dynamoDate = moment(dynamoResponse.Item.expiryDate.S, 'YYYY-MM-DD')
+        if (!dynamoDate.isValid()) {
+            throw new Error(`invalid date format in dynamo table ${dynamoTableName} : '${dynamoResponse.Item.expiryDate.S}'`)
+        }
+        return dynamoDate.format('YYYY-MM-DD')
     } else {
-        return dynamoResponse.Item.expiryDate.S
+        return null
     }
 }
 
@@ -81,7 +73,7 @@ async function asyncHandler(input) {
         return getResponse(expiryFromDynamo)
     } else {
         console.log(`expiry not found in dynamo for appId: ${appId} deviceId: ${deviceId}, putting new item`)
-        let newExpiry = moment().add(1, 'week').format('YYYY-MM-DD')
+        let newExpiry = moment().add(2, 'week').format('YYYY-MM-DD')
         let TTLTimestamp = moment().add(1, 'year').unix().toString()
         await  setInDynamo(appId, deviceId, newExpiry, TTLTimestamp)
         console.log(`returning new expiry  ${newExpiry} for appId: ${appId} deviceId: ${deviceId}`)
