@@ -26,8 +26,10 @@ Mappings:
   StageVariables:
     PROD:
       DomainName: 'digital-subscription-authorisation-prod.subscriptions.guardianapis.com'
+      ApiGatewayTargetDomainName: 'd-nhg1ruog5k.execute-api.eu-west-1.amazonaws.com'
     CODE:
       DomainName: 'digital-subscription-authorisation-code.subscriptions.guardianapis.com'
+      ApiGatewayTargetDomainName: 'd-axk4hzkvf8.execute-api.eu-west-1.amazonaws.com'
 Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
@@ -153,3 +155,13 @@ Resources:
       RestApiId: !Ref DigitalSubAuthApi
       DomainName: !Ref DigitalSubAuthDomainName
       Stage: !Sub ${Stage}
+  DigitalSubAuthDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneName: subscriptions.guardianapis.com.
+      Name: !Sub digital-subscription-authorisation-${Stage}.subscriptions.guardianapis.com.
+      Comment: !Sub CNAME for digital subscription auth ${Stage}
+      Type: CNAME
+      TTL: '120'
+      ResourceRecords:
+      - !FindInMap [StageVariables, !Ref 'Stage', ApiGatewayTargetDomainName]
