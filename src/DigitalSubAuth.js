@@ -57,6 +57,20 @@ function getResponse(expiryDate) {
     return response
 }
 
+function getMissingParamsResponse() {
+    var responseBody = {
+        error: {
+        message: "Mandatory data missing from request",
+        code: -50
+        }
+    }
+    var response = {
+        statusCode: 400,
+        body: JSON.stringify(responseBody)
+    }
+    return response
+}
+
 async function asyncHandler(input) {
     console.log("Starting digital subscription authorisation lambda...")
     if (!stage) {
@@ -66,6 +80,9 @@ async function asyncHandler(input) {
     let json = JSON.parse(input.body)
     let appId = json.appId
     let deviceId = json.deviceId
+    if (!appId || !deviceId) {
+        return getMissingParamsResponse()
+    }
     console.log(`getting expiry from dynamo for appId: ${appId} deviceId: ${deviceId}`)
     let expiryFromDynamo = await getExpiryFromDynamo(appId, deviceId)
     if (expiryFromDynamo) {
