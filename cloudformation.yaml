@@ -22,6 +22,12 @@ Parameters:
     Description: Bucket where RiffRaff uploads artifacts on deploy
     Type: String
     Default: subscriptions-dist
+Mappings:
+  StageVariables:
+    PROD:
+      DomainName: 'digital-subscription-authorisation-prod.subscriptions.guardianapis.com'
+    CODE:
+      DomainName: 'digital-subscription-authorisation-code.subscriptions.guardianapis.com'
 Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
@@ -132,3 +138,18 @@ Resources:
         Description: Deploys the digital sub Auth API into an environment/stage
         RestApiId: !Ref DigitalSubAuthApi
     DependsOn: AuthMethod
+
+  DigitalSubAuthDomainName:
+    Type: "AWS::ApiGateway::DomainName"
+    Properties:
+      RegionalCertificateArn: !Sub arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/4055df40-9561-423c-962b-f78f3ce70434
+      DomainName: !FindInMap [StageVariables, !Ref 'Stage', DomainName]
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+  DigitalSubBasePathMappings:
+    Type: "AWS::ApiGateway::BasePathMapping"
+    Properties:
+      RestApiId: !Ref DigitalSubAuthApi
+      DomainName: !Ref DigitalSubAuthDomainName
+      Stage: !Sub ${Stage}
