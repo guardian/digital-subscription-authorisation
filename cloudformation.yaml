@@ -27,9 +27,13 @@ Mappings:
     PROD:
       DomainName: 'digital-subscription-authorisation-prod.subscriptions.guardianapis.com'
       ApiGatewayTargetDomainName: 'd-nhg1ruog5k.execute-api.eu-west-1.amazonaws.com'
+      trialsTableReadCapacityUnits: 200
+      trialsTableWriteCapacityUnits: 2
     CODE:
       DomainName: 'digital-subscription-authorisation-code.subscriptions.guardianapis.com'
       ApiGatewayTargetDomainName: 'd-axk4hzkvf8.execute-api.eu-west-1.amazonaws.com'
+      trialsTableReadCapacityUnits: 1
+      trialsTableWriteCapacityUnits: 1
 Resources:
   ExecutionRole:
     Type: AWS::IAM::Role
@@ -59,7 +63,7 @@ Resources:
               Action:
                 - lambda:InvokeFunction
               Resource: "*"
-        - PolicyName: dynamoTable
+        - PolicyName: unEncryptedDynamoTable
           PolicyDocument:
             Statement:
               Effect: Allow
@@ -67,6 +71,14 @@ Resources:
               - dynamodb:PutItem
               - dynamodb:GetItem
               Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/cas-auth-${Stage}'
+        - PolicyName: dynamoTable
+          PolicyDocument:
+            Statement:
+              Effect: Allow
+              Action:
+              - dynamodb:PutItem
+              - dynamodb:GetItem
+              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/daily-edition-trial-periods-${Stage}'
   DigitalSubAuthLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -165,3 +177,26 @@ Resources:
       TTL: '120'
       ResourceRecords:
       - !FindInMap [StageVariables, !Ref 'Stage', ApiGatewayTargetDomainName]
+  DailyEditionTrialPeriodsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: deviceId
+        AttributeType: S
+      - AttributeName: appId
+        AttributeType: S
+      KeySchema:
+      - AttributeName: deviceId
+        KeyType: HASH
+      - AttributeName: appId
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: !FindInMap [StageVariables, !Ref 'Stage', trialsTableReadCapacityUnits]
+        WriteCapacityUnits: !FindInMap [StageVariables, !Ref 'Stage', trialsTableWriteCapacityUnits]
+      TableName: !Sub 'daily-edition-trial-periods-${Stage}'
+      SSESpecification:
+        SSEEnabled: true
+      TimeToLiveSpecification:
+        AttributeName: "ttlTimestamp"
+        Enabled: true
