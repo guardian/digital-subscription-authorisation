@@ -6,7 +6,7 @@ let stage = stages.find((stage) => {
     return stage === process.env.Stage
 })
 const dynamo = new AWS.DynamoDB()
-const dynamoTableName = `cas-auth-${stage}`
+const dynamoTableName = `daily-edition-trial-periods-${stage}`
 
 async function setInDynamo(appId, deviceId, expiry, TTL) {
     const params = {

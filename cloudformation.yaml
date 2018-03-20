@@ -63,14 +63,6 @@ Resources:
               Action:
                 - lambda:InvokeFunction
               Resource: "*"
-        - PolicyName: unEncryptedDynamoTable
-          PolicyDocument:
-            Statement:
-              Effect: Allow
-              Action:
-              - dynamodb:PutItem
-              - dynamodb:GetItem
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/cas-auth-${Stage}'
         - PolicyName: dynamoTable
           PolicyDocument:
             Statement:
