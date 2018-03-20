@@ -78,7 +78,7 @@ Resources:
               Action:
               - dynamodb:PutItem
               - dynamodb:GetItem
-              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/daily-edition-trials-${Stage}'
+              Resource: !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/daily-edition-trial-periods-${Stage}'
   DigitalSubAuthLambda:
     Type: AWS::Lambda::Function
     Properties:
@@ -177,7 +177,7 @@ Resources:
       TTL: '120'
       ResourceRecords:
       - !FindInMap [StageVariables, !Ref 'Stage', ApiGatewayTargetDomainName]
-  DailyEditionTrialsTable:
+  DailyEditionTrialPeriodsTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     Properties:
@@ -194,7 +194,7 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !FindInMap [StageVariables, !Ref 'Stage', trialsTableReadCapacityUnits]
         WriteCapacityUnits: !FindInMap [StageVariables, !Ref 'Stage', trialsTableWriteCapacityUnits]
-      TableName: !Sub 'daily-edition-trials-${Stage}'
+      TableName: !Sub 'daily-edition-trial-periods-${Stage}'
       SSESpecification:
         SSEEnabled: true
       TimeToLiveSpecification:
