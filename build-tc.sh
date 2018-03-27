@@ -30,8 +30,16 @@ yarn install
 echo "TRANSPILING"
 yarn compile
 
-echo "BUNDLING AND UPLOADING TO RIFFRAFF"
+echo "PACKAGING JS"
 yarn riffraff
+
+cd scala
+echo "COMPILING SCALA JAR"
+sbt assembly
+echo "COPYING SCALA JAR TO riffraff folder"
+cp target/scala-2.12/digital-subscription-authorisation-scala-lambdas.jar ././target/riffraff/digital-subscription-authorisation/
+cd..
+
 
 
 
