@@ -8,7 +8,14 @@ deployments:
     parameters:
       bucket: subscriptions-dist
       prefixStack: false
-      fileName: 'digital-subscription-authorisation-js.zip'
+      fileName: 'digital-subscription-authorisation.zip'
       functionNames:
       - DigitalSubAuth-
-
+  digital-subscription-authorisation-scala:
+    type: aws-lambda
+    parameters:
+      bucket: subscriptions-dist
+      prefixStack: false
+      fileName: 'digital-subscription-authorisation.jar'
+      functionNames:
+      - DigitalSubAuth-
