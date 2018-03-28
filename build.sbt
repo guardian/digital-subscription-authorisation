@@ -26,6 +26,7 @@ assemblyJarName := s"${name.value}.jar"
 riffRaffPackageType := assembly.value
 riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
+riffRaffManifestProjectName := "subscriptions::digital-subscription-authorisation"
 riffRaffArtifactResources += (file("cloudformation.yaml"), s"${name.value}-cfn/cfn.yaml")
 riffRaffArtifactResources += (file("js/target/digital-subscription-authorisation-js.zip"), "digital-subscription-authorisation-js.zip")
 
