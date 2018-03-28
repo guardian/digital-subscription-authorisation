@@ -4,9 +4,8 @@
   "description": "Authorization for digital subscriptions",
   "main": "index.js",
   "isAwsLambda": true,
-  "cloudformation": "cloudformation.yaml",
+  "uploadArtefact": false,
   "projectName": "subscriptions::digital-subscription-authorisation",
-  "riffraffFile": "riff-raff.yaml",
   "cloudformationAppTag": "digital-subscription-authorisation",
   "buildDir": "dist",
   "devDependencies": {
