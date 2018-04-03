@@ -3,12 +3,12 @@ regions:
 stacks:
 - subscriptions
 deployments:
-  js:
+  digital-subscription-authorisation-js:
     type: aws-lambda
     parameters:
       bucket: subscriptions-dist
       prefixStack: false
-      fileName: 'digital-subscription-authorisation.zip'
+      fileName: 'digital-subscription-authorisation-js.zip'
       functionNames:
       - DigitalSubAuth-
   digital-subscription-authorisation:

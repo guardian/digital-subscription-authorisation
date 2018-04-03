@@ -35,6 +35,6 @@ echo "PACKAGING"
 
 mkdir target
 cd dist
- zip -r ../target/digital-subscription-authorisation.zip .
+ zip -r ../target/digital-subscription-authorisation-js.zip .
 
 cd ..
