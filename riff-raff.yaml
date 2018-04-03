@@ -3,7 +3,7 @@ regions:
 stacks:
 - subscriptions
 deployments:
-  digital-subscription-authorisation:
+  digital-subscription-authorisation-js:
     type: aws-lambda
     parameters:
       bucket: subscriptions-dist
@@ -11,7 +11,7 @@ deployments:
       fileName: 'digital-subscription-authorisation.zip'
       functionNames:
       - DigitalSubAuth-
-  digital-subscription-authorisation: #it looks like these two cannot have the same name!! see how to do this!
+  digital-subscription-authorisation:
     type: aws-lambda
     parameters:
       bucket: subscriptions-dist
