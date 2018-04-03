@@ -99,6 +99,29 @@ Resources:
               Principal: apigateway.amazonaws.com
           DependsOn: DigitalSubAuthLambda
 
+  SubsApiResource:
+      Type: AWS::ApiGateway::Resource
+      Properties:
+          RestApiId: !Ref DigitalSubAuthApi
+          ParentId: !GetAtt [DigitalSubAuthApi, RootResourceId]
+          PathPart: subs
+      DependsOn: DigitalSubAuthApi
+
+  SubsMethod:
+      Type: AWS::ApiGateway::Method
+      Properties:
+          AuthorizationType: NONE
+          RestApiId: !Ref DigitalSubAuthApi
+          ResourceId: !Ref SubsApiResource
+          HttpMethod: POST
+          Integration:
+            Type: AWS_PROXY
+            IntegrationHttpMethod: POST
+            Uri: !ImportValue subscriptions-CODE-digital-subscription-expiry-DigitalSubscriptionExpiryLambdaUri
+      DependsOn:
+      - DigitalSubAuthApi
+      - SubsApiResource
+
   DigitalSubAuthApi:
       Type: "AWS::ApiGateway::RestApi"
       Properties:
