@@ -28,7 +28,7 @@ riffRaffUploadArtifactBucket := Option("riffraff-artifact")
 riffRaffUploadManifestBucket := Option("riffraff-builds")
 riffRaffManifestProjectName := "subscriptions::digital-subscription-authorisation"
 riffRaffArtifactResources += (file("cloudformation.yaml"), "cfn/cfn.yaml")
-riffRaffArtifactResources += (file(s"js/target/${name.value}.zip"), s"js/${name.value}-js.zip")
+riffRaffArtifactResources += (file(s"js/target/${name.value}-js.zip"), s"${name.value}-js/${name.value}-js.zip")
 
 TaskKey[Unit]("js") := {
   "sh build-js.sh" !
