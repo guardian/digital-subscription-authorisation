@@ -8,6 +8,31 @@ This simple application just looks up  trial period expiration dates in the ***c
 
 If no item is found for a giver user and device pair a new trial period is started by adding a new item to the table. 
 
+## Sample request
+
+By calling `/auth` we can get the trial period expiration date for a user:
+```
+POST /auth HTTP/1.1
+Host: localhost:9300
+Content-Type: application/json
+Cache-Control: no-cache
+
+
+{
+    "appId": "<appId>",
+    "deviceId": "<deviceId>"
+}
+```
+Response:
+```
+{
+  "expiry": {
+    "expiryType": "free",
+    "provider": "default",
+    "expiryDate": "2017-05-04"
+  }
+}
+```
 
 ## Running the lambda locally
 
