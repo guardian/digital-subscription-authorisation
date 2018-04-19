@@ -117,7 +117,8 @@ Resources:
           Integration:
             Type: AWS_PROXY
             IntegrationHttpMethod: POST
-            Uri: !ImportValue subscriptions-CODE-digital-subscription-expiry-DigitalSubscriptionExpiryLambdaUri
+            Uri:
+              Fn::ImportValue: !Sub "subscriptions-${Stage}-digital-subscription-expiry-DigitalSubscriptionExpiryLambdaUri"
       DependsOn:
       - DigitalSubAuthApi
       - SubsApiResource
