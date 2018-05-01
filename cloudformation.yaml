@@ -223,3 +223,23 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: "ttlTimestamp"
         Enabled: true
+
+  LambdaThrottledAlarm:
+      Type: "AWS::CloudWatch::Alarm"
+      Properties:
+       AlarmActions:
+          - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:fulfilment-dev
+       AlarmDescription: !Sub "DigitalSubAuth-${Stage} has throttled invocations"
+       AlarmName: !Sub "DigitalSubAuth-${Stage}_Throttle"
+       Dimensions:
+        - Name: FunctionName
+          Value: !Sub DigitalSubAuth-${Stage}
+       MetricName: Throttles
+       Namespace: AWS/Lambda
+       TreatMissingData: notBreaching
+       Statistic: Sum
+       Period: 600
+       EvaluationPeriods: 1
+       Threshold: 1
+       ComparisonOperator: GreaterThanOrEqualToThreshold
+      DependsOn: DigitalSubAuthLambda
