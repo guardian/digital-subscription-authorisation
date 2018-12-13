@@ -179,7 +179,7 @@ Resources:
   DigitalSubAuthDomainName:
     Type: "AWS::ApiGateway::DomainName"
     Properties:
-      RegionalCertificateArn: !Sub arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/4055df40-9561-423c-962b-f78f3ce70434
+      RegionalCertificateArn: !Sub arn:aws:acm:${AWS::Region}:${AWS::AccountId}:certificate/bece8c44-d92f-4661-a943-8b0b65e2ad6d
       DomainName: !FindInMap [StageVariables, !Ref 'Stage', DomainName]
       EndpointConfiguration:
         Types:
