@@ -1,40 +1,42 @@
 # digital-subscription-authorisation
 
-This service is lambda backed api gateway api that provides authorisation for digital subscription free trials.
+This service is lambda backed api gateway api that provides authorisation for [digital subscription](https://support.theguardian.com/uk/subscribe/digital) free trials.
 
-## Operation
+## How does it work?
 
-This simple application just looks up  trial period expiration dates in the ***cas-auth-[STAGE]*** table and returns them.
+* Looks up trial period expiration dates `expiryDate` in `daily-edition-trial-periods-{STAGE}` DynamoDB table.
+* If no item is found for a given `appId` and `deviceId` pair, then a new 14 day trial period is started by creating a new item in the table.
+* No API key is necessary on the POST request since `expiryDate` for given `(appId, deviceId)` pair cannot be modified after creation, that is, when it expires then it expires for good.
 
-If no item is found for a giver user and device pair a new trial period is started by adding a new item to the table. 
+## How to test in CODE?
 
-## Sample request
+Hitting
 
-By calling `/auth` we can get the trial period expiration date for a user:
 ```
-POST /auth HTTP/1.1
-Host: localhost:9300
+POST /CODE/auth HTTP/1.1
+Host: {api-gateway-url-code}
 Content-Type: application/json
-Cache-Control: no-cache
-
 
 {
-    "appId": "<appId>",
-    "deviceId": "<deviceId>"
+  "appId": "12",
+  "deviceId": "43"
 }
 ```
-Response:
+should respond with something like
+
 ```
 {
-  "expiry": {
-    "expiryType": "free",
-    "provider": "default",
-    "expiryDate": "2017-05-04"
-  }
+    "expiry": {
+        "expiryType": "free",
+        "provider": "default",
+        "expiryDate": "2019-11-27"
+    }
 }
 ```
 
-## Running the lambda locally
+Double check table [`daily-edition-trial-periods-CODE`](https://eu-west-1.console.aws.amazon.com/dynamodb/home?region=eu-west-1#tables:selected=daily-edition-trial-periods-CODE;tab=items) contains the record.
+
+## Running the lambda locally (FIXME: Out-of-date)
 
 Since the lambda needs to access a dynamo table AWS credentials with permission to read/write to cas-auth-DEV need to be set in the environment.
 
