@@ -1247,9 +1247,9 @@ lambda-local@ashiina/lambda-local#316f6c743f6305385655b00db7d8349dac174c1c:
     mute "^2.0.6"
     winston "^2.2.0"
 
-lodash-es@^4.17.4:
-  version "4.17.4"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.4.tgz#dcc1d7552e150a0640073ba9cb31d70f032950e7"
+lodash-es@^4.17.14:
+  version "4.17.14"
+  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.14.tgz#12a95a963cc5955683cee3b74e85458954f37ecc"
 
 lodash@^4.0.0, lodash@^4.2.0:
   version "4.17.21"
