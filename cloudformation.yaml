@@ -95,7 +95,7 @@ Resources:
       Handler: DigitalSubAuth.handler
       MemorySize: 1536
       Role: !GetAtt ExecutionRole.Arn
-      Runtime: nodejs10.x
+      Runtime: nodejs14.x
       Timeout: 300
 
   DigitalSubAuthApiPermission:
