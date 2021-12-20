@@ -10,11 +10,14 @@
   "cloudformationAppTag": "digital-subscription-authorisation",
   "buildDir": "dist",
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.24.1",
-    "babel-preset-env": "^1.4.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "core-js": "^3.20.0",
+    "glob-parent": "^6.0.2",
     "lambda-local": "^2.0.0",
-    "node-riffraff-artefact": "^2.0.1"
+    "node-riffraff-artefact": "^2.0.2",
+    "yarn-upgrade-all": "^0.5.4"
   },
   "scripts": {
     "riffraff-artefact": "./node_modules/.bin/riffraff-artefact",
@@ -26,6 +29,6 @@
   },
   "dependencies": {
     "lodash-es": "^4.17.21",
-    "moment": "^2.27.0"
+    "moment": "^2.29.1"
   }
 }
