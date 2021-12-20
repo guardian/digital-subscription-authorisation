@@ -13,6 +13,8 @@
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-preset-env": "^1.4.0",
+    "core-js": "^3.20.0",
+    "glob-parent": "^5.1.2",
     "lambda-local": "^2.0.0",
     "node-riffraff-artefact": "^2.0.1"
   },
