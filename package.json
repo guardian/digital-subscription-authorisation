@@ -30,5 +30,8 @@
   "dependencies": {
     "lodash-es": "^4.17.21",
     "moment": "^2.29.1"
+  },
+  "resolutions": {
+    "glob-parent": "^6.0.2"
   }
 }
