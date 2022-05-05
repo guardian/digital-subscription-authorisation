@@ -99,8 +99,6 @@ async function asyncHandler(input) {
 }
 
 exports.handler = function (input, context, callback) {
-    console.log(input);
-    console.dir(input);
     asyncHandler(input).then(res => callback(null, res)).catch(e => {
         console.log("error: " + e)
         callback(e)
