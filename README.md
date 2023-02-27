@@ -9,7 +9,7 @@ The `/auth` endpoint is no longer needed as we no longer offer free trials for t
 The full infrastructure for this is:
 
 - CAS domain: content-auth.guardian.co.uk - managed through NS1 DNS 
-- This CNames to digital-subscription-authorisation-prod.subscriptions.guardianapis.com
+- This CNames to Fastly (guardian.map.fastly.net.) which has an origin of digital-subscription-authorisation-prod.subscriptions.guardianapis.com
 - That is a api gateway [custom domain name](https://eu-west-1.console.aws.amazon.com/apigateway/main/publish/domain-names?domain=digital-subscription-authorisation-prod.subscriptions.guardianapis.com&region=eu-west-1) which points to
 [digital-sub-auth-handler-PROD api gateway API](https://eu-west-1.console.aws.amazon.com/apigateway/home?region=eu-west-1#/apis/klkk16peze/resources/noq8xxox02)
 
