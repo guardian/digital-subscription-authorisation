@@ -1,5 +1,24 @@
 # digital-subscription-authorisation
 
+This repo provides the api gateway infrastructure for the Content Authorisation Service (CAS). There are two endpoints defined 
+- `/auth` used to support free trials for the Daily edition app - the lambda which supports this is defined in this repo in the file DigitalSubAuth.js
+- `/subs` which looks up a Zuora subscription from a subscription id to allow users with a print subscription access to the apps - the lambda which supports this is defined in [support-service-lambdas](https://github.com/guardian/support-service-lambdas/tree/5daf1b31f39af60cb2663ed64c0ace58eaf1a328/handlers/digital-subscription-expiry) 
+
+The `/auth` endpoint is no longer needed as we no longer offer free trials for the daily edition so we should move the relevant api gateway infrastructure to support-service-lambdas and decommission this repo.
+
+The full infrastructure for this is:
+
+- CAS domain: content-auth.guardian.co.uk - managed through NS1 DNS 
+- This CNames to digital-subscription-authorisation-prod.subscriptions.guardianapis.com
+- That is a api gateway [custom domain name](https://eu-west-1.console.aws.amazon.com/apigateway/main/publish/domain-names?domain=digital-subscription-authorisation-prod.subscriptions.guardianapis.com&region=eu-west-1) which points to
+[digital-sub-auth-handler-PROD api gateway API](https://eu-west-1.console.aws.amazon.com/apigateway/home?region=eu-west-1#/apis/klkk16peze/resources/noq8xxox02)
+
+There are [Blazemeter tests for both endpoints](https://www.runscope.com/radar/f862w29p8z5f). I have disabled the one which calls the `/auth` endpoint to make sure that that was the only traffic it was receiving. When I'm sure I will delete it.
+
+
+
+## Old docs beneath this point 
+
 This service is lambda backed api gateway api that provides authorisation for [digital subscription](https://support.theguardian.com/uk/subscribe/digital) free trials.
 
 ## How does it work?
