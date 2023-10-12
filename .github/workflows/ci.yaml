@@ -25,4 +25,6 @@ jobs:
           yarn install
           yarn install --production --modules-folder dist/node_modules
           npx babel src -d dist
+          zip -r digital-subscription-authorisation.zip dist/DigitalSubAuth.js
+          ls -al
 
