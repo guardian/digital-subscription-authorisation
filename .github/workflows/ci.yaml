@@ -25,6 +25,16 @@ jobs:
           yarn install
           yarn install --production --modules-folder dist/node_modules
           npx babel src -d dist
-          zip -r digital-subscription-authorisation.zip dist/DigitalSubAuth.js
+          cd dist
+          zip -r digital-subscription-authorisation.zip *
           ls -al
+      - name: Upload to Riff-Raff
+        uses: guardian/actions-riff-raff@v2
+        with:
+          projectName: "subscriptions::digital-subscription-authorisation"
+          buildNumberOffset: 1
+          configPath: riff-raff.yaml
+          contentDirectories: |
+            digital-subscription-authorisation:
+              - dist/digital-subscription-authorisation.zip
 
