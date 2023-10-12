@@ -1,0 +1,17 @@
+name: build digital-subscription-authorisation
+on:
+  push
+jobs:
+  contributions-store-retention-policy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # needed by actions-riff-raff
+      contents: read # needed because the repo is private
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+      - name: Configure AWS credentials # needed by actions-riff-raff
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          aws-region: eu-west-1
