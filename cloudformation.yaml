@@ -223,3 +223,6 @@ Resources:
       TimeToLiveSpecification:
         AttributeName: "ttlTimestamp"
         Enabled: true
+      Tags:
+        - Key: devx-backup-enabled
+          Value: true
