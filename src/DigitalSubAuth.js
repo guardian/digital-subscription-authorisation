@@ -72,30 +72,32 @@ function getMissingParamsResponse() {
 }
 
 async function asyncHandler(input) {
-    console.log("Starting digital subscription authorisation lambda...")
-    if (!stage) {
-        throw new Error(`invalid stage ${process.env.Stage}, please check the stage env variable. Allowed values: ${stages}`)
-    }
-    console.log(`using table ${dynamoTableName}`)
-    let json = JSON.parse(input.body)
-    let appId = json.appId
-    let deviceId = json.deviceId
-    if (!appId || !deviceId) {
-        return getMissingParamsResponse()
-    }
-    console.log(`getting expiry from dynamo for appId: ${appId} deviceId: ${deviceId}`)
-    let expiryFromDynamo = await getExpiryFromDynamo(appId, deviceId)
-    if (expiryFromDynamo) {
-        console.log(`returning expiry from dynamo: ${expiryFromDynamo} for appId: ${appId} deviceId: ${deviceId}`)
-        return getResponse(expiryFromDynamo)
-    } else {
-        console.log(`expiry not found in dynamo for appId: ${appId} deviceId: ${deviceId}, putting new item`)
-        let newExpiry = moment().add(2, 'week').format('YYYY-MM-DD')
-        let TTLTimestamp = moment().add(1, 'year').unix().toString()
-        await  setInDynamo(appId, deviceId, newExpiry, TTLTimestamp)
-        console.log(`returning new expiry  ${newExpiry} for appId: ${appId} deviceId: ${deviceId}`)
-        return getResponse(newExpiry)
-    }
+    console.log("This lambda is no longer used")
+    return {statusCode: 404}
+    // console.log("Starting digital subscription authorisation lambda...")
+    // if (!stage) {
+    //     throw new Error(`invalid stage ${process.env.Stage}, please check the stage env variable. Allowed values: ${stages}`)
+    // }
+    // console.log(`using table ${dynamoTableName}`)
+    // let json = JSON.parse(input.body)
+    // let appId = json.appId
+    // let deviceId = json.deviceId
+    // if (!appId || !deviceId) {
+    //     return getMissingParamsResponse()
+    // }
+    // console.log(`getting expiry from dynamo for appId: ${appId} deviceId: ${deviceId}`)
+    // let expiryFromDynamo = await getExpiryFromDynamo(appId, deviceId)
+    // if (expiryFromDynamo) {
+    //     console.log(`returning expiry from dynamo: ${expiryFromDynamo} for appId: ${appId} deviceId: ${deviceId}`)
+    //     return getResponse(expiryFromDynamo)
+    // } else {
+    //     console.log(`expiry not found in dynamo for appId: ${appId} deviceId: ${deviceId}, putting new item`)
+    //     let newExpiry = moment().add(2, 'week').format('YYYY-MM-DD')
+    //     let TTLTimestamp = moment().add(1, 'year').unix().toString()
+    //     await  setInDynamo(appId, deviceId, newExpiry, TTLTimestamp)
+    //     console.log(`returning new expiry  ${newExpiry} for appId: ${appId} deviceId: ${deviceId}`)
+    //     return getResponse(newExpiry)
+    // }
 }
 
 exports.handler = function (input, context, callback) {
