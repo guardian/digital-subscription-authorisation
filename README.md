@@ -4,7 +4,7 @@ This repo provides the api gateway infrastructure for the Content Authorisation 
 - `/auth` used to support free trials for the Daily edition app - the lambda which supports this is defined in this repo in the file DigitalSubAuth.js
 - `/subs` which looks up a Zuora subscription from a subscription id to allow users with a print subscription access to the apps - the lambda which supports this is defined in [support-service-lambdas](https://github.com/guardian/support-service-lambdas/tree/5daf1b31f39af60cb2663ed64c0ace58eaf1a328/handlers/digital-subscription-expiry) 
 
-The `/auth` endpoint is no longer needed as we no longer offer free trials for the daily edition so we should move the relevant api gateway infrastructure to support-service-lambdas and decommission this repo.
+The `/auth` endpoint is no longer needed as we no longer offer free trials for the daily edition. It was switched to return a 404 response on 15/11/2023 by updating the lambda code directly in the AWS console - we should now move the relevant api gateway infrastructure to support-service-lambdas and decommission this repo.
 
 The full infrastructure for this is:
 
