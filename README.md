@@ -1,5 +1,10 @@
 # digital-subscription-authorisation
 
+## Update 15/05/2024
+The infrastructure from this product has now been moved to support-service-lambdas so this repository is no longer needed and will be archived.
+
+## Previous versions of the readme are in place below for information
+
 This repo provides the api gateway infrastructure for the Content Authorisation Service (CAS). There are two endpoints defined 
 - `/auth` used to support free trials for the Daily edition app - the lambda which supports this is defined in this repo in the file DigitalSubAuth.js
 - `/subs` which looks up a Zuora subscription from a subscription id to allow users with a print subscription access to the apps - the lambda which supports this is defined in [support-service-lambdas](https://github.com/guardian/support-service-lambdas/tree/5daf1b31f39af60cb2663ed64c0ace58eaf1a328/handlers/digital-subscription-expiry) 
